@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use function Env\env;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use League\OAuth2\Client\Provider\GenericProvider;
@@ -10,16 +12,16 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 const APP_SESS_ID = 'AZPHPSID';
 
-CONST TENNANT_ID               = "c6874728-71e6-41fe-a9e1-2e8c36776ad8";
-const OAUTH_APP_ID             = '0ef992e8-fdbf-4f41-9f9d-bff4cdb09de4';
-const OAUTH_APP_SECRET         = '';
+$TENNANT_ID               = env('ENTRA_TENNANT_ID');
+$OAUTH_APP_ID             = env('ENTRA_CLIENT_ID');
+$OAUTH_APP_SECRET         =  env('ENTRA_CLIENT_SECRET');
 const OAUTH_REDIRECT_URI       = '/auth.php?action=callback';
 
-const OAUTH_SCOPES             = [
-    'api://0ef992e8-fdbf-4f41-9f9d-bff4cdb09de4/user_impersonation', 
+$OAUTH_SCOPES             = [
+    'api://' . env('ENTRA_CLIENT_ID') . '/user_impersonation', 
     'offline_access' // To get a refresh token
 ];
-const OAUTH_AUTHORITY          = 'https://login.microsoftonline.com/' . TENNANT_ID;
+$OAUTH_AUTHORITY          = 'https://login.microsoftonline.com/' . $TENNANT_ID;
 const OAUTH_AUTHORIZE_ENDPOINT = '/oauth2/v2.0/authorize';
 const OAUTH_TOKEN_ENDPOINT     = '/oauth2/v2.0/token';
 
@@ -79,18 +81,18 @@ if (isset($_GET['type']) && isset($_GET['message'])) {
 if ('logout' === $action) {
     session_destroy();
     setcookie(APP_SESS_ID, '', time() - 1000);
-    header('Location: ' . $host . '/?type=success&message=Succesfully%20logged%20out');
+    header('Location: ' . $host . '/auth.php?type=success&message=Succesfully%20logged%20out');
 }
 
 if ('login' === $action) {
     $oAuthClient = new GenericProvider([
-        'clientId'                => OAUTH_APP_ID,
-        'clientSecret'            => OAUTH_APP_SECRET,
+        'clientId'                => $OAUTH_APP_ID,
+        'clientSecret'            => $OAUTH_APP_SECRET,
         'redirectUri'             => $host . OAUTH_REDIRECT_URI,
-        'urlAuthorize'            => OAUTH_AUTHORITY . OAUTH_AUTHORIZE_ENDPOINT,
-        'urlAccessToken'          => OAUTH_AUTHORITY . OAUTH_TOKEN_ENDPOINT,
+        'urlAuthorize'            => $OAUTH_AUTHORITY . OAUTH_AUTHORIZE_ENDPOINT,
+        'urlAccessToken'          => $OAUTH_AUTHORITY . OAUTH_TOKEN_ENDPOINT,
         'urlResourceOwnerDetails' => '',
-        'scopes'                  => implode(' ', OAUTH_SCOPES),
+        'scopes'                  => implode(' ', $OAUTH_SCOPES),
     ]);
 
     $authUrl = $oAuthClient->getAuthorizationUrl();
@@ -103,7 +105,7 @@ if ('callback' === $action) {
     unset($_SESSION['oauthState']);
 
     if (!isset($_GET['state']) || !isset($_GET['code'])) {
-        header('Location: ' . $host . '/?type=error&message=No%20OAuth%20session');
+        header('Location: ' . $host . '/auth.php?type=error&message=No%20OAuth%20session');
     }
 
     $providedState = $_GET['state'];
@@ -115,7 +117,7 @@ if ('callback' === $action) {
     }
 
     if (!isset($providedState) || $expectedState != $providedState) {
-      header('Location: ' . $host . '/?type=error&message=State%20does%20not%20match');
+      header('Location: ' . $host . '/auth.php?type=error&message=State%20does%20not%20match');
     }
 
     // Authorization code should be in the "code" query param
@@ -123,13 +125,13 @@ if ('callback' === $action) {
     if (isset($authCode)) {
         // Initialize the OAuth client
         $oAuthClient = new GenericProvider([
-            'clientId'                => OAUTH_APP_ID,
-            'clientSecret'            => OAUTH_APP_SECRET,
+            'clientId'                => $OAUTH_APP_ID,
+            'clientSecret'            => $OAUTH_APP_SECRET,
             'redirectUri'             => $host . OAUTH_REDIRECT_URI,
-            'urlAuthorize'            => OAUTH_AUTHORITY . OAUTH_AUTHORIZE_ENDPOINT,
-            'urlAccessToken'          => OAUTH_AUTHORITY . OAUTH_TOKEN_ENDPOINT,
+            'urlAuthorize'            => $OAUTH_AUTHORITY . OAUTH_AUTHORIZE_ENDPOINT,
+            'urlAccessToken'          => $OAUTH_AUTHORITY . OAUTH_TOKEN_ENDPOINT,
             'urlResourceOwnerDetails' => '',
-            'scopes'                  => OAUTH_SCOPES,
+            'scopes'                  => $OAUTH_SCOPES,
         ]);
 
         $accessToken = null;
@@ -141,7 +143,7 @@ if ('callback' === $action) {
 
 
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
-            header('Location: ' . $host . '/?type=error&message=' . urlencode($e->getMessage()));
+            header('Location: ' . $host . '/auth.php?type=error&message=' . urlencode($e->getMessage()));
         }
     }
 
@@ -198,6 +200,37 @@ if ('callback' === $action) {
             <p><?php echo htmlentities($displayMessage, ENT_QUOTES, 'UTF-8') ?></p>
         </div>
         <?php endif ?>
+
+        <?php  /* if (null !== $accessToken): ?>
+
+        <pre>
+                    Access Token
+                   : <?php echo htmlentities($accessToken->getToken(), ENT_QUOTES, 'UTF-8') ?>
+                
+                    Refresh Token
+                   : <?php echo htmlentities($accessToken->getRefreshToken(), ENT_QUOTES, 'UTF-8') ?>
+                
+                    Expired in
+                   : <?php echo (string) $accessToken->getExpires(); ?>
+                
+                    Already expired?
+                   : <?php echo htmlentities($accessToken->hasExpired() ? 'expired' : 'not expired', ENT_QUOTES, 'UTF-8') ?>
+
+        </pre>
+
+        <?php endif  */ ?>
+
+        <pre>Private key: <?php echo $_ENV['JWT_PRIVATE_KEY']; ?></pre>
+        
+        <pre>Public key: <?php echo $_ENV['JWT_PUBLIC_KEY']; ?></pre>
+
+        <?php
+            $_ENV['JWT_PRIVATE_KEY'] = '';
+        ?>
+
+        <pre>Private key: <?php echo $_ENV['JWT_PRIVATE_KEY']; ?></pre>
+
+        
         <?php if ([] !== $user): ?>
             <p>User details</p>
             <ul>

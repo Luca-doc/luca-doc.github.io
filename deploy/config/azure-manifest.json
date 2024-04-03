@@ -1,40 +1,19 @@
 {
-	"id": "771cab93-3d47-4bbc-bd8e-65c190d964bc",
+	"id": "0a68551d-899a-430e-a3a1-fc7349b0baca",
 	"acceptMappedClaims": null,
 	"accessTokenAcceptedVersion": null,
 	"addIns": [],
 	"allowPublicClient": null,
-	"appId": "0ef992e8-fdbf-4f41-9f9d-bff4cdb09de4",
-	"appRoles": [
-		{
-			"allowedMemberTypes": [
-				"User"
-			],
-			"description": "msiam_access",
-			"displayName": "msiam_access",
-			"id": "b9632174-c057-4f7e-951b-be3adc52bfe6",
-			"isEnabled": true,
-			"value": null
-		},
-		{
-			"allowedMemberTypes": [
-				"User"
-			],
-			"description": "User",
-			"displayName": "User",
-			"id": "18d14569-c3bd-439b-9a66-3a2aee01d14f",
-			"isEnabled": true,
-			"value": null
-		}
-	],
+	"appId": "73ed65a5-e879-4027-beab-f5e64de803b7",
+	"appRoles": [],
 	"oauth2AllowUrlPathMatching": false,
-	"createdDateTime": "2024-03-28T16:59:43Z",
+	"createdDateTime": "2024-04-03T12:55:24Z",
 	"description": null,
 	"certification": null,
 	"disabledByMicrosoftStatus": null,
 	"groupMembershipClaims": null,
 	"identifierUris": [
-		"api://0ef992e8-fdbf-4f41-9f9d-bff4cdb09de4"
+		"api://73ed65a5-e879-4027-beab-f5e64de803b7"
 	],
 	"informationalUrls": {
 		"termsOfService": null,
@@ -46,19 +25,21 @@
 	"knownClientApplications": [],
 	"logoUrl": null,
 	"logoutUrl": null,
-	"name": "MOJ-Pre-Prod-Intranet-v2",
+	"name": "MOJ-Local-Intranet-v2",
 	"notes": null,
-	"oauth2AllowIdTokenImplicitFlow": true,
+	"oauth2AllowIdTokenImplicitFlow": false,
 	"oauth2AllowImplicitFlow": false,
 	"oauth2Permissions": [
 		{
-			"adminConsentDescription": "Allow the application to access MOJ-Pre-Prod-Intranet-v2 on behalf of the signed-in user.",
-			"adminConsentDisplayName": "Access MOJ-Pre-Prod-Intranet-v2",
-			"id": "f7f7cec9-c08c-4d02-9e04-1f95f052753e",
+			"adminConsentDescription": "Access Intranet on behalf of the signed-in user",
+			"adminConsentDisplayName": "Access Intranet",
+			"id": "4b933699-7147-4f6b-87ca-0924abdf7bd9",
 			"isEnabled": true,
+			"lang": null,
+			"origin": "Application",
 			"type": "User",
-			"userConsentDescription": "Allow the application to access MOJ-Pre-Prod-Intranet-v2 on your behalf.",
-			"userConsentDisplayName": "Access MOJ-Pre-Prod-Intranet-v2",
+			"userConsentDescription": "Access Intranet on your behalf",
+			"userConsentDisplayName": "Access Intranet",
 			"value": "user_impersonation"
 		}
 	],
@@ -72,27 +53,28 @@
 	"passwordCredentials": [
 		{
 			"customKeyIdentifier": null,
-			"endDate": "2024-09-24T16:05:20.126Z",
-			"keyId": "d1017f6b-74b3-476c-94ff-f3e7f7598b3b",
-			"startDate": "2024-03-28T17:05:20.126Z",
+			"endDate": "2024-09-30T12:58:46.534Z",
+			"keyId": "129e5c2c-4205-4d51-b0d4-3b99b94e3c10",
+			"startDate": "2024-04-03T12:58:46.534Z",
 			"value": null,
-			"displayName": "my-client-secret",
-			"hint": "rKt"
+			"createdOn": "2024-04-03T14:24:18.353573Z",
+			"hint": "DTb",
+			"displayName": "Local-Intranet-v2"
 		}
 	],
 	"preAuthorizedApplications": [
 		{
-			"appId": "0ef992e8-fdbf-4f41-9f9d-bff4cdb09de4",
+			"appId": "73ed65a5-e879-4027-beab-f5e64de803b7",
 			"permissionIds": [
-				"f7f7cec9-c08c-4d02-9e04-1f95f052753e"
+				"4b933699-7147-4f6b-87ca-0924abdf7bd9"
 			]
 		}
 	],
 	"publisherDomain": "JusticeUK.onmicrosoft.com",
 	"replyUrlsWithType": [
 		{
-			"type": "Web",
-			"url": "https://intranet.docker/auth.php?action=callback"
+			"url": "https://intranet.docker/auth.php?action=callback",
+			"type": "Web"
 		}
 	],
 	"requiredResourceAccess": [
@@ -110,13 +92,5 @@
 	"signInUrl": null,
 	"signInAudience": "AzureADMyOrg",
 	"tags": [],
-	"tokenEncryptionKeyId": null,
-	"servicePrincipalLockConfiguration": {
-		"isEnabled": true,
-		"allProperties": true,
-		"credentialsWithUsageVerify": true,
-		"credentialsWithUsageSign": true,
-		"identifierUris": false,
-		"tokenEncryptionKeyId": true
-	}
+	"tokenEncryptionKeyId": null
 }
